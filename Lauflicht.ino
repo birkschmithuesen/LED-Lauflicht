@@ -54,7 +54,7 @@ void loop() {
   }
   if(lightStatus)showLight();
   if(soundStatus)playSound();
-  calculateFps(1); 
+  //calculateFps(1); 
 }
 
 void checkButtonState() {
@@ -69,17 +69,6 @@ void checkButtonState() {
 
 void showLED(){
   fadeUsingColor(leds, totalLengt, CRGB(traceR, traceG, traceB));
-  for(int i=0; i<lineWidth; i++){
-    int linePos = constrain(pos+i, 0, num_leds);
-    
-    // revers the 3rd stripe
-    int lengthOfTwoStripes = 2 * NUM_LEDS_PER_STRIP;
-    if(linePos >= lengthOfTwoStripes){
-      int reversePos = lengthOfTwoStripes + (NUM_LEDS_PER_STRIP - (linePos - lengthOfTwoStripes));
-      leds[reversePos] = lineColor;
-    }
-    else leds[linePos] = lineColor;
-  }
   
   // just update the Stripe each updateEachNFrame, to have the visuals with the fade out more often calulated then the refresh of the Stripe allows it
   frameCount++;
@@ -93,11 +82,13 @@ void showLED(){
 
 
 void doCycleStep() {
+  calculateLedColors();
   pos=pos+speed; //do one step
   if(pos>num_leds)pos=0; //CYCLE-Mode: when the line is moved till the end - start from the beginning again
 }
 
 void doOneTimeStep() {
+  calculateLedColors();
   pos=pos+speed; //do one step
   lightStatus = false; //somehow if not setting the variable to false all the time it sometimes is set to 255
   if(pos>num_leds){ //when the line is moved till the end: set it back to start and stop the execution
@@ -107,6 +98,19 @@ void doOneTimeStep() {
   }
 }
 
+void calculateLedColors(){
+    for(int i=0; i<lineWidth; i++){
+    int linePos = constrain(pos+i, 0, num_leds);
+    
+    // revers the 3rd stripe
+    int lengthOfTwoStripes = 2 * NUM_LEDS_PER_STRIP;
+    if(linePos >= lengthOfTwoStripes){
+      int reversePos = lengthOfTwoStripes + (NUM_LEDS_PER_STRIP - (linePos - lengthOfTwoStripes));
+      leds[reversePos] = lineColor;
+    }
+    else leds[linePos] = lineColor;
+  }
+}
 void showLight(){
   if(lightCount<30){
     digitalWrite(lightTriggerPin, HIGH); 
