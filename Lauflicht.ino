@@ -20,18 +20,18 @@ float speed = 1;
 int lineWidth = 1;
 int pos = 0;
 
-int num_leds = NUM_STRIPS * NUM_LEDS_PER_STRIP - 200;
+int num_leds = NUM_STRIPS * NUM_LEDS_PER_STRIP - 12;
 int totalLengt = NUM_STRIPS * NUM_LEDS_PER_STRIP;
 CRGB lineColor = CRGB(255,255,255);
 int brightness = 255;
-int traceR = 235;
-int traceG = 200;
-int traceB = 220;
+int traceR = 200;
+int traceG = 235;
+int traceB = 235;
 
 boolean lauflichtStatus = false, lightStatus = false, soundStatus = false;
 
 int frameCount=0, lightCount = 0, soundCount = 0;
-int updateEachNFrame = 7; //since the LED refresh rate is quite slow, the visuals should be calculated more often then the LEDs are refreshed
+int updateEachNFrame = 10; //since the LED refresh rate is quite slow, the visuals should be calculated more often then the LEDs are refreshed
 
 void setup() {
   FastLED.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
@@ -61,6 +61,7 @@ void checkButtonState() {
   if(lauflichtStatus == false){
     int buttonState = digitalRead(buttonPin);
     if (buttonState == LOW) {
+      Serial.println("button pressed");
       lauflichtStatus = true;
       soundStatus = true;
     }
